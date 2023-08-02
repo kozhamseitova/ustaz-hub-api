@@ -14,13 +14,13 @@ type Service struct {
 	Comment
 }
 
-func NewService(repository repository.Repository, config config.Config, token *jwttoken.JWTToken) *Service {
+func NewService(repository *repository.Repository, config *config.Config, token *jwttoken.JWTToken) *Service {
 	return &Service{
-		Authorization: NewAuthService(repository, config, token),
-		User:          NewUserService(repository, config, token),
-		Product:       NewProductService(repository, config, token),
-		Post:          NewPostService(repository, config, token),
-		Comment:       NewCommentService(repository, config, token),
+		Authorization: NewAuthService(repository.Authorization, config, token),
+		User:          NewUserService(repository.User, config, token),
+		Product:       NewProductService(repository.User, config, token),
+		Post:          NewPostService(repository.Post, config, token),
+		Comment:       NewCommentService(repository.Comment, config, token),
 	}
 }
 

@@ -7,12 +7,12 @@ import (
 )
 
 type CommentService struct {
-	repository repository.Repository
-	config     config.Config
+	repository repository.Comment
+	config     *config.Config
 	token      *jwttoken.JWTToken
 }
 
-func NewCommentService(repository repository.Repository, config config.Config, token *jwttoken.JWTToken) *AuthService {
+func NewCommentService(repository repository.Comment, config *config.Config, token *jwttoken.JWTToken) *AuthService {
 	return &AuthService{
 		repository: repository,
 		config:     config,

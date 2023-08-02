@@ -7,12 +7,12 @@ import (
 )
 
 type PostService struct {
-	repository repository.Repository
-	config     config.Config
+	repository repository.Post
+	config     *config.Config
 	token      *jwttoken.JWTToken
 }
 
-func NewPostService(repository repository.Repository, config config.Config, token *jwttoken.JWTToken) *AuthService {
+func NewPostService(repository repository.Post, config *config.Config, token *jwttoken.JWTToken) *AuthService {
 	return &AuthService{
 		repository: repository,
 		config:     config,

@@ -13,7 +13,7 @@ type Repository struct {
 	Comment
 }
 
-func NewRepository(pool *pgxpool.Pool) *Repository {
+func NewPostgresRepository(pool *pgxpool.Pool) *Repository {
 	return &Repository{
 		Authorization: pgrepo.NewAuthPostgres(pool),
 		User:          pgrepo.NewUserPostgres(pool),

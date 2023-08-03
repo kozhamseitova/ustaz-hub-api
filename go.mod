@@ -3,10 +3,11 @@ module github.com/kozhamseitova/ustaz-hub-api
 go 1.20
 
 require (
+	github.com/georgysavva/scany v1.2.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgx/v4 v4.18.1
-	github.com/kozhamseitova/api-blog v0.0.0-20230801201512-22eb144bba19
+	github.com/kozhamseitova/aisha v0.0.0-20230803181919-0aaa84e1e844
 )
 
 require (

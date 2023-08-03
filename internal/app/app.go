@@ -1,9 +1,9 @@
 package app
 
 import (
-	"github.com/kozhamseitova/api-blog/pkg/client/postgres"
-	"github.com/kozhamseitova/api-blog/pkg/httpserver"
-	"github.com/kozhamseitova/api-blog/pkg/jwttoken"
+	"github.com/kozhamseitova/aisha/pkg/client/postgres"
+	"github.com/kozhamseitova/aisha/pkg/httpserver"
+	"github.com/kozhamseitova/aisha/pkg/jwttoken"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/config"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/handler"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/repository"

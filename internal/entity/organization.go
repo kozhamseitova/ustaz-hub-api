@@ -1,7 +1,7 @@
 package entity
 
 type Organization struct {
-	ID       int64 `json:"id" db:"id""`
-	Name     int64 `json:"name" db:"name""`
-	Location int64 `json:"location" db:"location""`
+	ID       int64  `json:"id" db:"id"`
+	Name     string `json:"name" db:"name"`
+	Location string `json:"location" db:"location"`
 }

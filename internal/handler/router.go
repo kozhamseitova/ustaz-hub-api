@@ -28,7 +28,7 @@ func (h *Handler) InitRouter() *gin.Engine {
 			products.GET("/", h.getAllProducts)
 			products.PUT("/", h.updateProduct)
 			products.DELETE("/", h.deleteProduct)
-			products.GET("/:product_id/comments", h.getAllProductsComments)
+			products.GET("/:id/comments", h.getAllProductsComments)
 		}
 
 		posts := apiV1.Group("/posts")
@@ -38,7 +38,7 @@ func (h *Handler) InitRouter() *gin.Engine {
 			posts.GET("/", h.getAllPosts)
 			posts.PUT("/", h.updatePost)
 			posts.DELETE("/", h.deletePost)
-			posts.GET("/:post_id/comments", h.getAllPostsComments)
+			posts.GET("/:id/comments", h.getAllPostsComments)
 		}
 
 		comments := apiV1.Group("/comments")

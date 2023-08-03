@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/kozhamseitova/api-blog/pkg/jwttoken"
+	"github.com/kozhamseitova/aisha/pkg/jwttoken"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/config"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/entity"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/repository"

@@ -7,7 +7,7 @@ import (
 
 type User interface {
 	CreateUser(ctx context.Context, u *entity.User) error
-	GetUserByUsername(ctx context.Context, username, password string) (string, error)
+	GetUserByUsername(ctx context.Context, username string) (*entity.User, error)
 	UpdateUser(ctx context.Context, u *entity.User) error
 	DeleteUser(ctx context.Context, id int64) error
 }

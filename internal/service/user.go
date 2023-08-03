@@ -2,7 +2,11 @@ package service
 
 import (
 	"context"
-	"github.com/kozhamseitova/api-blog/pkg/jwttoken"
+	"database/sql"
+	"errors"
+	"fmt"
+	"github.com/kozhamseitova/aisha/pkg/jwttoken"
+	"github.com/kozhamseitova/aisha/pkg/util"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/config"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/entity"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/repository"
@@ -23,11 +27,43 @@ func NewUserService(repository repository.User, config *config.Config, token *jw
 }
 
 func (s *UserService) CreateUser(ctx context.Context, u *entity.User) error {
+	hashedPassword, err := util.HashPassword(u.Password)
+	if err != nil {
+		return err
+	}
+
+	u.Password = hashedPassword
+
+	err = s.repository.CreateUser(ctx, u)
+
+	if err != nil {
+		return fmt.Errorf("create user err: %w", err)
+	}
+
 	return nil
 }
 
 func (s *UserService) Login(ctx context.Context, username, password string) (string, error) {
-	return "", nil
+	user, err := s.repository.GetUserByUsername(ctx, username)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return "", fmt.Errorf("user not found")
+		}
+		return "", fmt.Errorf("get user err: %w", err)
+	}
+
+	err = util.CheckPassword(password, user.Password)
+	if err != nil {
+		return "", fmt.Errorf("incorrect password err: %w", err)
+	}
+
+	token, err := s.token.CreateToken(user.ID, user.Role, s.config.Token.TimeToLive)
+
+	if err != nil {
+		return "", fmt.Errorf("create token err: %w", err)
+	}
+
+	return token, nil
 }
 
 func (s *UserService) UpdateUser(ctx context.Context, u *entity.User) error {

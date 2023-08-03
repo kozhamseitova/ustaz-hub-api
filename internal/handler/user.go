@@ -63,17 +63,17 @@ func (h *Handler) loginUser(ctx *gin.Context) {
 }
 
 func (h *Handler) updateUser(ctx *gin.Context) {
-	var req entity.User
-
-	err := ctx.ShouldBindJSON(&req)
-	if err != nil {
-		log.Printf("bind json err: %s \n", err.Error())
-		ctx.JSON(http.StatusBadRequest, &api.Error{
-			Code:    http.StatusBadRequest,
-			Message: err.Error(),
-		})
-		return
-	}
+	//var req entity.User
+	//
+	//err := ctx.ShouldBindJSON(&req)
+	//if err != nil {
+	//	log.Printf("bind json err: %s \n", err.Error())
+	//	ctx.JSON(http.StatusBadRequest, &api.Error{
+	//		Code:    http.StatusBadRequest,
+	//		Message: err.Error(),
+	//	})
+	//	return
+	//}
 
 }
 

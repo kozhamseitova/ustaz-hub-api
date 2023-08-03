@@ -23,7 +23,7 @@ func Run(cfg *config.Config) error {
 	)
 
 	if err != nil {
-
+		//ggygvy
 	}
 
 	log.Println("db connection success")

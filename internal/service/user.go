@@ -67,10 +67,20 @@ func (s *UserService) Login(ctx context.Context, username, password string) (str
 }
 
 func (s *UserService) UpdateUser(ctx context.Context, u *entity.User) error {
+
+	err := s.repository.UpdateUser(ctx, u)
+	if err != nil {
+		return fmt.Errorf("update user err: %w", err)
+	}
 	return nil
 }
 
 func (s *UserService) DeleteUser(ctx context.Context, id int64) error {
+	err := s.repository.DeleteUser(ctx, id)
+
+	if err != nil {
+		return fmt.Errorf("delete user err: %w", err)
+	}
 	return nil
 }
 

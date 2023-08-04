@@ -64,10 +64,48 @@ func (p *UserPostgres) GetUserByUsername(ctx context.Context, username string) (
 	return user, nil
 }
 
-func (p *UserPostgres) UpdateUser(ctx context.Context, u *entity.User) error {
-	return nil
+func (p *UserPostgres) UpdateUser(ctx context.Context, user *entity.User) error {
+	query := fmt.Sprintf(`
+		UPDATE %s
+		SET
+			username = $1,
+			password = $2,
+			created_at = $3,
+			updated_at = $4,
+			role = $5,
+			first_name = $6,
+			last_name = $7,
+			about = $8,
+			organization_id = $9,
+			speciality_id = $10
+		WHERE
+			id = $11
+	`, usersTable)
+
+	_, err := p.Pool.Exec(ctx, query,
+		user.Username,
+		user.Password,
+		user.CreatedAt,
+		user.UpdatedAt,
+		user.Role,
+		user.FirstName,
+		user.LastName,
+		user.About,
+		user.Organization.ID,
+		user.Speciality.ID,
+		user.ID,
+	)
+
+	return err
 }
 
-func (p *UserPostgres) DeleteUser(ctx context.Context, id int64) error {
-	return nil
+func (p *UserPostgres) DeleteUser(ctx context.Context, userID int64) error {
+	query := fmt.Sprintf(`
+		DELETE FROM %s
+		WHERE
+			id = $1
+	`, usersTable)
+
+	_, err := p.Pool.Exec(ctx, query, userID)
+	return err
 }

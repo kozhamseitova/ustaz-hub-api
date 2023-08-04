@@ -13,29 +13,26 @@ type User interface {
 }
 
 type Product interface {
-	// TODO: возвращай айдишник при создании
-	CreateProduct(ctx context.Context, p *entity.Product) error
+	CreateProduct(ctx context.Context, p *entity.Product) (int64, error)
 	GetProductById(ctx context.Context, id int64) (*entity.Product, error)
-	GetProductsByUserId(ctx context.Context, userId int64) ([]*entity.Product, error)
-	GetAllProducts(ctx context.Context) ([]*entity.Product, error)
+	GetProductsByUserId(ctx context.Context, userId int64) ([]entity.Product, error)
+	GetAllProducts(ctx context.Context) ([]entity.Product, error)
 	UpdateProduct(ctx context.Context, p *entity.Product) error
 	DeleteProduct(ctx context.Context, id int64) error
 }
 
 type Post interface {
-	// TODO: возвращай айдишник при создании
-	CreatePost(ctx context.Context, p *entity.Post) error
+	CreatePost(ctx context.Context, p *entity.Post) (int64, error)
 	GetPostById(ctx context.Context, id int64) (*entity.Post, error)
-	GetPostsByUserId(ctx context.Context, userId int64) ([]*entity.Post, error)
-	GetAllPosts(ctx context.Context) ([]*entity.Post, error)
+	GetPostsByUserId(ctx context.Context, userId int64) ([]entity.Post, error)
+	GetAllPosts(ctx context.Context) ([]entity.Post, error)
 	UpdatePost(ctx context.Context, p *entity.Post) error
 	DeletePost(ctx context.Context, id int64) error
 }
 
 type Comment interface {
-	// TODO: возвращай айдишник при создании
-	CreateComment(ctx context.Context, p *entity.Comment) error
-	GetAllProductsComments(ctx context.Context, productId int64) ([]*entity.Comment, error)
-	GetAllPostsComments(ctx context.Context, postId int64) ([]*entity.Comment, error)
-	GetCommentsByParentId(ctx context.Context, parentId int64) ([]*entity.Comment, error)
+	CreateComment(ctx context.Context, p *entity.CreateComment) (int64, error)
+	GetAllProductsComments(ctx context.Context, productId int64) ([]entity.Comment, error)
+	GetAllPostsComments(ctx context.Context, postId int64) ([]entity.Comment, error)
+	GetCommentsByParentId(ctx context.Context, parentId int64) ([]entity.Comment, error)
 }

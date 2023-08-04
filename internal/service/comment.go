@@ -22,18 +22,18 @@ func NewCommentService(repository repository.Comment, config *config.Config, tok
 	}
 }
 
-func (s *CommentService) CreateComment(ctx context.Context, c *entity.Comment) error {
+func (s *CommentService) CreateComment(ctx context.Context, c *entity.CreateComment) (int64, error) {
 	return s.repository.CreateComment(ctx, c)
 }
 
-func (s *CommentService) GetAllProductsComments(ctx context.Context, productId int64) ([]*entity.Comment, error) {
+func (s *CommentService) GetAllProductsComments(ctx context.Context, productId int64) ([]entity.Comment, error) {
 	return s.repository.GetAllProductsComments(ctx, productId)
 }
 
-func (s *CommentService) GetAllPostsComments(ctx context.Context, postId int64) ([]*entity.Comment, error) {
+func (s *CommentService) GetAllPostsComments(ctx context.Context, postId int64) ([]entity.Comment, error) {
 	return s.repository.GetAllPostsComments(ctx, postId)
 }
 
-func (s *CommentService) GetCommentsByParentId(ctx context.Context, parentId int64) ([]*entity.Comment, error) {
+func (s *CommentService) GetCommentsByParentId(ctx context.Context, parentId int64) ([]entity.Comment, error) {
 	return s.repository.GetCommentsByParentId(ctx, parentId)
 }

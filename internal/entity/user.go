@@ -7,11 +7,11 @@ type User struct {
 	Username     string        `json:"username" db:"username" binding:"required"`
 	CreatedAt    time.Time     `json:"created_at" db:"created_at"`
 	UpdatedAt    time.Time     `json:"updated_at" db:"updated_at"`
-	Role         string        `json:"role" db:"role" binding:"required"`
-	FirstName    string        `json:"first_name" db:"first_name" binding:"required"`
-	LastName     string        `json:"last_name" db:"last_name" binding:"required"`
+	Role         string        `json:"role" db:"role"`
+	FirstName    string        `json:"first_name" db:"first_name"`
+	LastName     string        `json:"last_name" db:"last_name"`
 	About        string        `json:"about" db:"about"`
-	Organization *Organization `json:"organization" db:"organization" binding:"required"`
-	Speciality   *Speciality   `json:"speciality" db:"speciality" binding:"required"`
-	Password     string        `json:"password" db:"password" binding:"required"`
+	Organization *Organization `json:"organization" db:"organization"`
+	Speciality   *Speciality   `json:"speciality" db:"speciality"`
+	Password     string        `json:"password" db:"password"`
 }

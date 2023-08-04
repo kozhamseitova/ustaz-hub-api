@@ -75,6 +75,8 @@ func (h *Handler) updateUser(ctx *gin.Context) {
 	//	return
 	//}
 
+	// call service
+
 }
 
 func (h *Handler) deleteUser(ctx *gin.Context) {

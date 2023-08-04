@@ -78,7 +78,7 @@ func (h *Handler) updateUser(ctx *gin.Context) {
 		return
 	}
 
-	userCtx, ok := ctx.Get(userCtx)
+	userContext, ok := ctx.Get(userCtx)
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
@@ -87,7 +87,7 @@ func (h *Handler) updateUser(ctx *gin.Context) {
 		return
 	}
 
-	user, ok := userCtx.(UserCtx)
+	user, ok := userContext.(UserCtx)
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
@@ -137,7 +137,7 @@ func (h *Handler) deleteUser(ctx *gin.Context) {
 
 	userId := int64(id)
 
-	userCtx, ok := ctx.Get(userCtx)
+	userContext, ok := ctx.Get(userCtx)
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
@@ -146,7 +146,7 @@ func (h *Handler) deleteUser(ctx *gin.Context) {
 		return
 	}
 
-	user, ok := userCtx.(UserCtx)
+	user, ok := userContext.(UserCtx)
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,

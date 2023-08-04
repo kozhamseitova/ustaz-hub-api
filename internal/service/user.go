@@ -93,7 +93,7 @@ func (s *UserService) VerifyToken(token string) (int64, string, error) {
 	return payload.UserId, payload.UserRole, nil
 }
 
-func (s *UserService) CheckPermission(userId, objUserId, userRole, action string) bool {
+func (s *UserService) CheckPermission(userId, objUserId int64, userRole, action string) bool {
 	switch userRole {
 	case "admin":
 		return true

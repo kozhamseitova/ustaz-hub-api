@@ -22,7 +22,7 @@ func (h *Handler) createComment(ctx *gin.Context) {
 		return
 	}
 
-	commentId, err := h.services.CreateComment(ctx, &req)
+	commentId, err := h.services.Comment.CreateComment(ctx, &req)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
@@ -48,7 +48,7 @@ func (h *Handler) getAllProductsComments(ctx *gin.Context) {
 		return
 	}
 
-	comments, err := h.services.GetAllProductsComments(ctx, int64(productId))
+	comments, err := h.services.Comment.GetAllProductsComments(ctx, int64(productId))
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
@@ -75,7 +75,7 @@ func (h *Handler) getAllPostsComments(ctx *gin.Context) {
 		return
 	}
 
-	comments, err := h.services.GetAllPostsComments(ctx, int64(postId))
+	comments, err := h.services.Comment.GetAllPostsComments(ctx, int64(postId))
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
@@ -102,7 +102,7 @@ func (h *Handler) getCommentsByParentId(ctx *gin.Context) {
 		return
 	}
 
-	comments, err := h.services.GetCommentsByParentId(ctx, int64(parentId))
+	comments, err := h.services.Comment.GetCommentsByParentId(ctx, int64(parentId))
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{

@@ -10,6 +10,8 @@ import (
 )
 
 func (h *Handler) createPost(ctx *gin.Context) {
+	action := "create"
+
 	var req api.CreatePostRequest
 
 	err := ctx.ShouldBindJSON(&req)
@@ -22,9 +24,37 @@ func (h *Handler) createPost(ctx *gin.Context) {
 		return
 	}
 
+	userContext, ok := ctx.Get(userCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user not found",
+		})
+		return
+	}
+
+	user, ok := userContext.(UserCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user is not of the expected type",
+		})
+		return
+	}
+
+	isAllowed := h.services.User.CheckPermission(user.UserId, req.UserId, user.UserRole, action)
+
+	if !isAllowed {
+		ctx.JSON(http.StatusUnauthorized, &api.Error{
+			Code:    http.StatusUnauthorized,
+			Message: "permission denied",
+		})
+		return
+	}
+
 	var post = ConvertCreatePostRequestToPost(&req)
 
-	postId, err := h.services.CreatePost(ctx, post)
+	postId, err := h.services.Post.CreatePost(ctx, post)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
@@ -51,7 +81,7 @@ func (h *Handler) getPostById(ctx *gin.Context) {
 		return
 	}
 
-	post, err := h.services.GetPostById(ctx, int64(id))
+	post, err := h.services.Post.GetPostById(ctx, int64(id))
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
@@ -78,7 +108,7 @@ func (h *Handler) getPostsByUserId(ctx *gin.Context) {
 		return
 	}
 
-	posts, err := h.services.GetPostsByUserId(ctx, int64(id))
+	posts, err := h.services.Post.GetPostsByUserId(ctx, int64(id))
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
@@ -96,7 +126,7 @@ func (h *Handler) getPostsByUserId(ctx *gin.Context) {
 }
 
 func (h *Handler) getAllPosts(ctx *gin.Context) {
-	posts, err := h.services.GetAllPosts(ctx)
+	posts, err := h.services.Post.GetAllPosts(ctx)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
@@ -114,6 +144,7 @@ func (h *Handler) getAllPosts(ctx *gin.Context) {
 }
 
 func (h *Handler) updatePost(ctx *gin.Context) {
+	action := "update"
 	var req api.CreatePostRequest
 
 	err := ctx.ShouldBindJSON(&req)
@@ -126,9 +157,37 @@ func (h *Handler) updatePost(ctx *gin.Context) {
 		return
 	}
 
+	userContext, ok := ctx.Get(userCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user not found",
+		})
+		return
+	}
+
+	user, ok := userContext.(UserCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user is not of the expected type",
+		})
+		return
+	}
+
+	isAllowed := h.services.User.CheckPermission(user.UserId, req.UserId, user.UserRole, action)
+
+	if !isAllowed {
+		ctx.JSON(http.StatusUnauthorized, &api.Error{
+			Code:    http.StatusUnauthorized,
+			Message: "permission denied",
+		})
+		return
+	}
+
 	var post = ConvertCreatePostRequestToPost(&req)
 
-	err = h.services.UpdatePost(ctx, post)
+	err = h.services.Post.UpdatePost(ctx, post)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
@@ -145,6 +204,8 @@ func (h *Handler) updatePost(ctx *gin.Context) {
 }
 
 func (h *Handler) deletePost(ctx *gin.Context) {
+	action := "delete"
+
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, &api.Error{
@@ -154,7 +215,37 @@ func (h *Handler) deletePost(ctx *gin.Context) {
 		return
 	}
 
-	err = h.services.DeletePost(ctx, int64(id))
+	userId := int64(id)
+
+	userContext, ok := ctx.Get(userCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user not found",
+		})
+		return
+	}
+
+	user, ok := userContext.(UserCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user is not of the expected type",
+		})
+		return
+	}
+
+	isAllowed := h.services.User.CheckPermission(user.UserId, userId, user.UserRole, action)
+
+	if !isAllowed {
+		ctx.JSON(http.StatusUnauthorized, &api.Error{
+			Code:    http.StatusUnauthorized,
+			Message: "permission denied",
+		})
+		return
+	}
+
+	err = h.services.Post.DeletePost(ctx, int64(id))
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{

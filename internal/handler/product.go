@@ -25,7 +25,7 @@ func (h *Handler) createProduct(ctx *gin.Context) {
 
 	var product = ConvertCreateProductRequestToProduct(&req)
 
-	userCtx, ok := ctx.Get(userCtx)
+	userContext, ok := ctx.Get(userCtx)
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
@@ -34,7 +34,7 @@ func (h *Handler) createProduct(ctx *gin.Context) {
 		return
 	}
 
-	user, ok := userCtx.(UserCtx)
+	user, ok := userContext.(UserCtx)
 	if !ok {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
@@ -80,7 +80,7 @@ func (h *Handler) getProductById(ctx *gin.Context) {
 		return
 	}
 
-	product, err := h.services.GetProductById(ctx, int64(id))
+	product, err := h.services.Product.GetProductById(ctx, int64(id))
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
@@ -107,7 +107,7 @@ func (h *Handler) getProductsByUserId(ctx *gin.Context) {
 		return
 	}
 
-	products, err := h.services.GetProductsByUserId(ctx, int64(id))
+	products, err := h.services.Product.GetProductsByUserId(ctx, int64(id))
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
@@ -125,7 +125,7 @@ func (h *Handler) getProductsByUserId(ctx *gin.Context) {
 }
 
 func (h *Handler) getAllProducts(ctx *gin.Context) {
-	products, err := h.services.GetAllProducts(ctx)
+	products, err := h.services.Product.GetAllProducts(ctx)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
@@ -143,6 +143,8 @@ func (h *Handler) getAllProducts(ctx *gin.Context) {
 }
 
 func (h *Handler) updateProduct(ctx *gin.Context) {
+	action := "update"
+
 	var req api.CreateProductRequest
 
 	err := ctx.ShouldBindJSON(&req)
@@ -157,7 +159,35 @@ func (h *Handler) updateProduct(ctx *gin.Context) {
 
 	var product = ConvertCreateProductRequestToProduct(&req)
 
-	err = h.services.UpdateProduct(ctx, product)
+	userContext, ok := ctx.Get(userCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user not found",
+		})
+		return
+	}
+
+	user, ok := userContext.(UserCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user is not of the expected type",
+		})
+		return
+	}
+
+	isAllowed := h.services.User.CheckPermission(user.UserId, req.UserId, user.UserRole, action)
+
+	if !isAllowed {
+		ctx.JSON(http.StatusUnauthorized, &api.Error{
+			Code:    http.StatusUnauthorized,
+			Message: "permission denied",
+		})
+		return
+	}
+
+	err = h.services.Product.UpdateProduct(ctx, product)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
@@ -174,6 +204,8 @@ func (h *Handler) updateProduct(ctx *gin.Context) {
 }
 
 func (h *Handler) deleteProduct(ctx *gin.Context) {
+	action := "delete"
+
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, &api.Error{
@@ -183,7 +215,37 @@ func (h *Handler) deleteProduct(ctx *gin.Context) {
 		return
 	}
 
-	err = h.services.DeleteProduct(ctx, int64(id))
+	userId := int64(id)
+
+	userContext, ok := ctx.Get(userCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user not found",
+		})
+		return
+	}
+
+	user, ok := userContext.(UserCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user is not of the expected type",
+		})
+		return
+	}
+
+	isAllowed := h.services.User.CheckPermission(user.UserId, userId, user.UserRole, action)
+
+	if !isAllowed {
+		ctx.JSON(http.StatusUnauthorized, &api.Error{
+			Code:    http.StatusUnauthorized,
+			Message: "permission denied",
+		})
+		return
+	}
+
+	err = h.services.Product.DeleteProduct(ctx, int64(id))
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{

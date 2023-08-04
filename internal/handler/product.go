@@ -9,6 +9,19 @@ import (
 	"strconv"
 )
 
+// createProduct creates a new product
+// @Summary Create product
+// @Description Create a new product
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param req body api.CreateProductRequest true "Request body"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /products [post]
 func (h *Handler) createProduct(ctx *gin.Context) {
 	action := "create"
 	var req api.CreateProductRequest
@@ -70,6 +83,19 @@ func (h *Handler) createProduct(ctx *gin.Context) {
 
 }
 
+// getProductById gets a product by ID
+// @Summary Get product by ID
+// @Description Get a product by its ID
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param id path int true "Product ID"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /products/{id} [get]
 func (h *Handler) getProductById(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -97,6 +123,19 @@ func (h *Handler) getProductById(ctx *gin.Context) {
 	})
 }
 
+// getProductsByUserId gets products by user ID
+// @Summary Get products by user ID
+// @Description Get all products created by a specific user
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param user_id path int true "User ID"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /users/{user_id}/products [get]
 func (h *Handler) getProductsByUserId(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("user_id"))
 	if err != nil {
@@ -124,6 +163,18 @@ func (h *Handler) getProductsByUserId(ctx *gin.Context) {
 	})
 }
 
+// getAllProducts gets all products
+// @Summary Get all products
+// @Description Get all products in the system
+// @Tags products
+// @Accept json
+// @Produce json
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /products [get]
 func (h *Handler) getAllProducts(ctx *gin.Context) {
 	products, err := h.services.Product.GetAllProducts(ctx)
 
@@ -142,6 +193,19 @@ func (h *Handler) getAllProducts(ctx *gin.Context) {
 	})
 }
 
+// updateProduct updates a product
+// @Summary Update product
+// @Description Update a product
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param req body api.CreateProductRequest true "Request body"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /products [put]
 func (h *Handler) updateProduct(ctx *gin.Context) {
 	action := "update"
 
@@ -203,6 +267,19 @@ func (h *Handler) updateProduct(ctx *gin.Context) {
 
 }
 
+// deleteProduct deletes a product
+// @Summary Delete product
+// @Description Delete a product
+// @Tags products
+// @Accept json
+// @Produce json
+// @Param id path int true "Product ID"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /products/{id} [delete]
 func (h *Handler) deleteProduct(ctx *gin.Context) {
 	action := "delete"
 

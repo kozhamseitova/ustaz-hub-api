@@ -9,6 +9,19 @@ import (
 	"strconv"
 )
 
+// createPost creates a new post
+// @Summary Create post
+// @Description Create a new post
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param req body api.CreatePostRequest true "Request body"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /posts [post]
 func (h *Handler) createPost(ctx *gin.Context) {
 	action := "create"
 
@@ -71,6 +84,19 @@ func (h *Handler) createPost(ctx *gin.Context) {
 
 }
 
+// getPostById gets a post by ID
+// @Summary Get post by ID
+// @Description Get a post by its ID
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param id path int true "Post ID"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /posts/{id} [get]
 func (h *Handler) getPostById(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -98,6 +124,19 @@ func (h *Handler) getPostById(ctx *gin.Context) {
 	})
 }
 
+// getPostsByUserId gets posts by user ID
+// @Summary Get posts by user ID
+// @Description Get all posts created by a specific user
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param user_id path int true "User ID"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /users/{user_id}/posts [get]
 func (h *Handler) getPostsByUserId(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("user_id"))
 	if err != nil {
@@ -125,6 +164,18 @@ func (h *Handler) getPostsByUserId(ctx *gin.Context) {
 	})
 }
 
+// getAllPosts gets all posts
+// @Summary Get all posts
+// @Description Get all posts in the system
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /posts [get]
 func (h *Handler) getAllPosts(ctx *gin.Context) {
 	posts, err := h.services.Post.GetAllPosts(ctx)
 
@@ -143,6 +194,19 @@ func (h *Handler) getAllPosts(ctx *gin.Context) {
 	})
 }
 
+// updatePost updates a post
+// @Summary Update post
+// @Description Update a post
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param req body api.CreatePostRequest true "Request body"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /posts [put]
 func (h *Handler) updatePost(ctx *gin.Context) {
 	action := "update"
 	var req api.CreatePostRequest
@@ -203,6 +267,19 @@ func (h *Handler) updatePost(ctx *gin.Context) {
 
 }
 
+// deletePost deletes a post
+// @Summary Delete post
+// @Description Delete a post
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param id path int true "Post ID"
+// @Success 200 {object} api.Ok
+// @Failure 400 {object} api.Error
+// @Failure 401 {object} api.Error
+// @Failure 500 {object} api.Error
+// @Security ApiKeyAuth
+// @Router /posts/{id} [delete]
 func (h *Handler) deletePost(ctx *gin.Context) {
 	action := "delete"
 

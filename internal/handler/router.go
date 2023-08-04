@@ -1,53 +1,63 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	_ "github.com/kozhamseitova/ustaz-hub-api/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+)
 
 func (h *Handler) InitRouter() *gin.Engine {
 	router := gin.Default()
 
-	auth := router.Group("/auth")
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	apiV1 := router.Group("/api/v1")
 	{
-		auth.POST("/user-register", h.createUser)
-		auth.POST("/user-login", h.loginUser)
-	}
-
-	apiV1 := router.Group("/api/v1", h.userIdentity)
-	{
-		users := apiV1.Group("/users")
+		auth := apiV1.Group("/auth")
 		{
-			users.PUT("/", h.updateUser)
-			users.DELETE("/:id", h.deleteUser)
-			users.GET("/:user_id/products", h.getProductsByUserId)
-			users.GET("/:user_id/posts", h.getPostsByUserId)
+			auth.POST("/user-register", h.createUser)
+			auth.POST("/user-login", h.loginUser)
 		}
 
-		products := apiV1.Group("/products")
+		api := apiV1.Group("/", h.userIdentity)
 		{
-			products.POST("/", h.createProduct)
-			products.GET("/:id", h.getProductById)
-			products.GET("/", h.getAllProducts)
-			products.PUT("/", h.updateProduct)
-			products.DELETE("/:id", h.deleteProduct)
-			products.GET("/:id/comments", h.getAllProductsComments)
-		}
+			users := api.Group("/users")
+			{
+				users.PUT("/", h.updateUser)
+				users.DELETE("/:id", h.deleteUser)
+				users.GET("/:user_id/products", h.getProductsByUserId)
+				users.GET("/:user_id/posts", h.getPostsByUserId)
+			}
 
-		posts := apiV1.Group("/posts")
-		{
-			posts.POST("/", h.createPost)
-			posts.GET("/:id", h.getPostById)
-			posts.GET("/", h.getAllPosts)
-			posts.PUT("/", h.updatePost)
-			posts.DELETE("/:id", h.deletePost)
-			posts.GET("/:id/comments", h.getAllPostsComments)
-		}
+			products := api.Group("/products")
+			{
+				products.POST("/", h.createProduct)
+				products.GET("/:id", h.getProductById)
+				products.GET("/", h.getAllProducts)
+				products.PUT("/", h.updateProduct)
+				products.DELETE("/:id", h.deleteProduct)
+				products.GET("/:id/comments", h.getAllProductsComments)
+			}
 
-		comments := apiV1.Group("/comments")
-		{
-			comments.POST("/", h.createComment)
-			comments.GET("/:id", h.getCommentsByParentId)
-			//delete
-		}
+			posts := api.Group("/posts")
+			{
+				posts.POST("/", h.createPost)
+				posts.GET("/:id", h.getPostById)
+				posts.GET("/", h.getAllPosts)
+				posts.PUT("/", h.updatePost)
+				posts.DELETE("/:id", h.deletePost)
+				posts.GET("/:id/comments", h.getAllPostsComments)
+			}
 
+			comments := api.Group("/comments")
+			{
+				comments.POST("/", h.createComment)
+				comments.GET("/:id", h.getCommentsByParentId)
+				//delete
+			}
+
+		}
 	}
 
 	return router

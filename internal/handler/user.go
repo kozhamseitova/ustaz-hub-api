@@ -9,6 +9,19 @@ import (
 	"strconv"
 )
 
+// createUser registration new user
+//
+//	@Summary      Create user
+//	@Description  Create new user
+//	@Tags         auth
+//	@Accept       json
+//	@Produce      json
+//	@Param req body entity.User true "req body"
+//
+//	@Success      201
+//	@Failure      400  {object}  api.Error
+//	@Failure      500  {object}  api.Error
+//	@Router       /auth/user-register [post]
 func (h *Handler) createUser(ctx *gin.Context) {
 	var req entity.User
 
@@ -34,6 +47,19 @@ func (h *Handler) createUser(ctx *gin.Context) {
 	ctx.Status(http.StatusCreated)
 }
 
+// loginUser authentication for user
+//
+// @Summary      User login
+// @Description  Authenticate user and generate JWT token
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param req body api.LoginRequest true "req body"
+//
+// @Success      200  {object}  api.Ok
+// @Failure      400  {object}  api.Error
+// @Failure      500  {object}  api.Error
+// @Router       /auth/user-login [post]
 func (h *Handler) loginUser(ctx *gin.Context) {
 	var req api.LoginRequest
 
@@ -63,6 +89,21 @@ func (h *Handler) loginUser(ctx *gin.Context) {
 	})
 }
 
+// updateUser updates user profile
+//
+// @Summary      Update user profile
+// @Description  Update user information
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param req body entity.User true "req body"
+//
+// @Security     ApiKeyAuth
+// @Success      200  {object}  api.Ok
+// @Failure      400  {object}  api.Error
+// @Failure      401  {object}  api.Error
+// @Failure      500  {object}  api.Error
+// @Router       /users [put]
 func (h *Handler) updateUser(ctx *gin.Context) {
 	action := "update"
 
@@ -123,6 +164,21 @@ func (h *Handler) updateUser(ctx *gin.Context) {
 
 }
 
+// deleteUser deletes a user
+//
+// @Summary      Delete user
+// @Description  Delete a user account
+// @Tags         users
+// @Accept       json
+// @Produce      json
+// @Param id path int true "User ID" Format(int64)
+//
+// @Security     ApiKeyAuth
+// @Success      200  {object}  api.Ok
+// @Failure      400  {object}  api.Error
+// @Failure      401  {object}  api.Error
+// @Failure      500  {object}  api.Error
+// @Router       /users/{id} [delete]
 func (h *Handler) deleteUser(ctx *gin.Context) {
 	action := "delete"
 

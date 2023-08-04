@@ -1,0 +1,805 @@
+basePath: /api/v1
+definitions:
+  api.CreatePostRequest:
+    properties:
+      id:
+        type: integer
+      post_text:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  api.CreateProductRequest:
+    properties:
+      description:
+        type: string
+      file_path:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      uploaded_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  api.Error:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+  api.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  api.Ok:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+  entity.CreateComment:
+    properties:
+      author_id:
+        type: integer
+      comment_text:
+        type: string
+      grade:
+        type: integer
+      id:
+        type: integer
+      is_review:
+        type: boolean
+      paren_id:
+        type: integer
+      post_id:
+        type: integer
+      product_id:
+        type: integer
+    type: object
+  entity.Organization:
+    properties:
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+    type: object
+  entity.Speciality:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  entity.User:
+    properties:
+      about:
+        type: string
+      created_at:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      organization:
+        $ref: '#/definitions/entity.Organization'
+      password:
+        type: string
+      role:
+        type: string
+      speciality:
+        $ref: '#/definitions/entity.Speciality'
+      updated_at:
+        type: string
+      username:
+        type: string
+    required:
+    - username
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: kozhamseitova91@gmail.com
+    name: Aisha
+  description: Api for simple blog for teachers.
+  title: Ustaz Hub API
+  version: 0.0.1
+paths:
+  /auth/user-login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and generate JWT token
+      parameters:
+      - description: req body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/api.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      summary: User login
+      tags:
+      - auth
+  /auth/user-register:
+    post:
+      consumes:
+      - application/json
+      description: Create new user
+      parameters:
+      - description: req body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/entity.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      summary: Create user
+      tags:
+      - auth
+  /comments:
+    post:
+      consumes:
+      - application/json
+      description: Create a new comment
+      parameters:
+      - description: Request body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/entity.CreateComment'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Create comment
+      tags:
+      - comments
+  /comments/{id}/comments:
+    get:
+      consumes:
+      - application/json
+      description: Get all comments with a specific parent ID
+      parameters:
+      - description: Parent ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get comments by parent ID
+      tags:
+      - comments
+  /posts:
+    get:
+      consumes:
+      - application/json
+      description: Get all posts in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all posts
+      tags:
+      - posts
+    post:
+      consumes:
+      - application/json
+      description: Create a new post
+      parameters:
+      - description: Request body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Create post
+      tags:
+      - posts
+    put:
+      consumes:
+      - application/json
+      description: Update a post
+      parameters:
+      - description: Request body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreatePostRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Update post
+      tags:
+      - posts
+  /posts/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a post
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete post
+      tags:
+      - posts
+    get:
+      consumes:
+      - application/json
+      description: Get a post by its ID
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get post by ID
+      tags:
+      - posts
+  /posts/{id}/comments:
+    get:
+      consumes:
+      - application/json
+      description: Get all comments associated with a specific post
+      parameters:
+      - description: Post ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all comments for a post
+      tags:
+      - comments
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Get all products in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all products
+      tags:
+      - products
+    post:
+      consumes:
+      - application/json
+      description: Create a new product
+      parameters:
+      - description: Request body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Create product
+      tags:
+      - products
+    put:
+      consumes:
+      - application/json
+      description: Update a product
+      parameters:
+      - description: Request body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Update product
+      tags:
+      - products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete product
+      tags:
+      - products
+    get:
+      consumes:
+      - application/json
+      description: Get a product by its ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get product by ID
+      tags:
+      - products
+  /products/{id}/comments:
+    get:
+      consumes:
+      - application/json
+      description: Get all comments associated with a specific product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get all comments for a product
+      tags:
+      - comments
+  /users:
+    put:
+      consumes:
+      - application/json
+      description: Update user information
+      parameters:
+      - description: req body
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/entity.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Update user profile
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user account
+      parameters:
+      - description: User ID
+        format: int64
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Delete user
+      tags:
+      - users
+  /users/{user_id}/posts:
+    get:
+      consumes:
+      - application/json
+      description: Get all posts created by a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get posts by user ID
+      tags:
+      - posts
+  /users/{user_id}/products:
+    get:
+      consumes:
+      - application/json
+      description: Get all products created by a specific user
+      parameters:
+      - description: User ID
+        in: path
+        name: user_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.Ok'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/api.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/api.Error'
+      security:
+      - ApiKeyAuth: []
+      summary: Get products by user ID
+      tags:
+      - products
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

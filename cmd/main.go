@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/app"
 	"github.com/kozhamseitova/ustaz-hub-api/internal/config"
+	"log"
 )
 
 // @title           Ustaz Hub API
@@ -26,10 +26,9 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(fmt.Sprintf("%#v", cfg))
-
+	log.Printf("%#v", cfg)
 	err = app.Run(cfg)
 	if err != nil {
-		panic(err)
+		log.Fatalf("failed to to run app: %v", err)
 	}
 }

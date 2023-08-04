@@ -5,19 +5,29 @@ services:
     restart: always
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: ustaz_hub_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ustaz-app
 
   go_app:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      DB_PASSWORD: "password"
+      TOKEN_SECRET_KEY: "password"
     ports:
       - "8080:8080"
     depends_on:
       - postgres
+    networks:
+      - ustaz-app
 
+networks:
+  ustaz-app:
+    driver: bridge
 volumes:
   postgres_data:

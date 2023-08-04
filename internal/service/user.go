@@ -84,6 +84,27 @@ func (s *UserService) DeleteUser(ctx context.Context, id int64) error {
 	return nil
 }
 
-func (s *UserService) VerifyToken(token string) (int64, error) {
-	return 0, nil
+func (s *UserService) VerifyToken(token string) (int64, string, error) {
+	payload, err := s.token.ValidateToken(token)
+	if err != nil {
+		return 0, "", fmt.Errorf("validate token err: %w", err)
+	}
+
+	return payload.UserId, payload.UserRole, nil
+}
+
+func (s *UserService) CheckPermission(userId, objUserId, userRole, action string) bool {
+	switch userRole {
+	case "admin":
+		return true
+	case "moderator":
+		return action == "delete" || action == "update" || action == "get"
+	case "teacher":
+		if userId != objUserId {
+			return false
+		}
+		return action == "update" || action == "get" || action == "create"
+	default:
+		return false
+	}
 }

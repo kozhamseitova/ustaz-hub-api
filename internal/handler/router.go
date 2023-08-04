@@ -11,12 +11,12 @@ func (h *Handler) InitRouter() *gin.Engine {
 		auth.POST("/user-login", h.loginUser)
 	}
 
-	apiV1 := router.Group("/api/v1")
+	apiV1 := router.Group("/api/v1", h.userIdentity)
 	{
 		users := apiV1.Group("/users")
 		{
 			users.PUT("/", h.updateUser)
-			users.DELETE("/", h.deleteUser)
+			users.DELETE("/:id", h.deleteUser)
 			users.GET("/:user_id/products", h.getProductsByUserId)
 			users.GET("/:user_id/posts", h.getPostsByUserId)
 		}

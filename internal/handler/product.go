@@ -10,6 +10,7 @@ import (
 )
 
 func (h *Handler) createProduct(ctx *gin.Context) {
+	action := "create"
 	var req api.CreateProductRequest
 
 	err := ctx.ShouldBindJSON(&req)
@@ -24,7 +25,35 @@ func (h *Handler) createProduct(ctx *gin.Context) {
 
 	var product = ConvertCreateProductRequestToProduct(&req)
 
-	productId, err := h.services.CreateProduct(ctx, product)
+	userCtx, ok := ctx.Get(userCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user not found",
+		})
+		return
+	}
+
+	user, ok := userCtx.(UserCtx)
+	if !ok {
+		ctx.JSON(http.StatusInternalServerError, &api.Error{
+			Code:    http.StatusInternalServerError,
+			Message: "user is not of the expected type",
+		})
+		return
+	}
+
+	isAllowed := h.services.User.CheckPermission(user.UserId, req.UserId, user.UserRole, action)
+
+	if !isAllowed {
+		ctx.JSON(http.StatusUnauthorized, &api.Error{
+			Code:    http.StatusUnauthorized,
+			Message: "permission denied",
+		})
+		return
+	}
+
+	productId, err := h.services.Product.CreateProduct(ctx, product)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, &api.Error{
 			Code:    http.StatusInternalServerError,
